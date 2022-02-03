@@ -1,0 +1,10 @@
+.Cards {
+  display: flex;
+  color: white;
+
+  flex-wrap: wrap;
+  flex-direction: row;
+  width: 100%;
+  flex-grow: 1;
+  justify-content: space-evenly;
+}

@@ -1,0 +1,11 @@
+.Card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Card__image {
+  border-radius: 10%;
+  height: 20vh;
+  width: 10vw;
+}
