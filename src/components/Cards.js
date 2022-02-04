@@ -17,22 +17,6 @@ const Cards = ({
       {/*<p>Score: {currentScore}</p>
       <p>High Score: {highScore}</p>
   <button onClick={incrementScore}>Increment Score</button>*/}
-      {characters &&
-        getRandomCharacters(characters, level.cardsQuantity)
-          .map((character) => {
-            return {
-              name: character.name,
-              imgSource: character.images[0],
-            };
-          })
-          .map((characterObject) => {
-            return (
-              <Card
-                name={characterObject.name}
-                imgSource={characterObject.imgSource}
-              ></Card>
-            );
-          })}
     </div>
   );
 };
