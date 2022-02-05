@@ -15,7 +15,7 @@ const Overlay = ({
         <div className="Overlay__content">
           <h1 className="Overlay__title">Game Over</h1>
           <p className="Overlay__text">
-            Congratulations, your score is {score}
+            Congratulations, your score is: {score}
           </p>
           <button onClick={onButtonClicked} className="Overlay__button">
             New Game
