@@ -1,8 +1,0 @@
-.Cards {
-  display: flex;
-  color: white;
-  flex-wrap: wrap;
-  flex-direction: row;
-  width: 70%;
-  justify-content: space-evenly;
-}
