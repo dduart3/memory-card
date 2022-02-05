@@ -1,0 +1,29 @@
+.Overlay {
+  font-family: "Ninja Naruto";
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: #282c34;
+  z-index: 999;
+  color: white;
+}
+
+.Overlay__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Overlay__title {
+  font-size: 3rem;
+}
+
+.Overlay__button {
+  color: rgb(212, 57, 0);
+  padding: 0.5rem;
+  cursor: pointer;
+}
