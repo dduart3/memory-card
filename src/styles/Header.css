@@ -6,9 +6,9 @@
 
 .Header__title {
   font-family: "Ninja Naruto";
-  font-size: 3rem;
+  font-size: 5rem;
   letter-spacing: 0.2rem;
-  background: -webkit-linear-gradient(orangered, orange);
+  background: -webkit-linear-gradient(top, orangered, orange);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
