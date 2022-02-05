@@ -1,22 +1,22 @@
 import "../styles/Cards.css";
 import React from "react";
 import Card from "./Card";
-import { useState, useEffect } from "react";
-import axios from "axios";
 
-const Cards = ({
-  currentScore,
-  highScore,
-  incrementScore,
-  characters,
-  level,
-  getRandomCharacters,
-}) => {
+const Cards = ({ currentScore, highScore, cards, onCardClicked }) => {
   return (
     <div className="Cards">
-      {/*<p>Score: {currentScore}</p>
-      <p>High Score: {highScore}</p>
-  <button onClick={incrementScore}>Increment Score</button>*/}
+      {cards &&
+        cards.map((card) => {
+          return (
+            <Card
+              id={card.id}
+              onCardClicked={() => onCardClicked(card.id)}
+              name={card.name}
+              imgSource={card.imgSource}
+              key={card.id}
+            ></Card>
+          );
+        })}
     </div>
   );
 };
