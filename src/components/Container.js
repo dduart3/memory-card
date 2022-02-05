@@ -13,6 +13,9 @@ const Container = () => {
   const [characters, setCharacters] = useState(null);
   const [level, setLevel] = useState({ levelNumber: 1, cardsQuantity: 4 });
   const [cards, setCards] = useState(null);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [isGameOverInfoVisible, setIsGameOverInfoVisible] = useState(false);
+  const [isLoaderVisible, setIsLoaderVisible] = useState(false);
 
   const isCharactersSet = () => characters;
 
@@ -65,14 +68,36 @@ const Container = () => {
     }
 
     if (isCharactersSet() && isGameOver()) {
-      updateLevel();
+      showGameOverInfo();
     } else if (isCharactersSet()) {
+      showLoader(1.5);
       setCards(getRandomCharacters(characters, level.cardsQuantity));
     }
   }, [level, characters, gameOver]);
 
   const updateScore = () => {
     setCurrentScore(currentScore + 1);
+  };
+
+  const showLoader = (seconds) => {
+    setIsOverlayVisible(true);
+    setIsLoaderVisible(true);
+
+    setTimeout(() => {
+      setIsOverlayVisible(false);
+      setIsLoaderVisible(false);
+    }, seconds * 1000);
+  };
+
+  const showGameOverInfo = () => {
+    setIsOverlayVisible(true);
+    setIsGameOverInfoVisible(true);
+  };
+
+  const onButtonClicked = () => {
+    setIsGameOverInfoVisible(false);
+    setIsOverlayVisible(false);
+    updateLevel();
   };
 
   const onCardClicked = (id) => {
@@ -161,7 +186,15 @@ const Container = () => {
 
   return (
     <div className="Container">
-      <Overlay text="loading lvl 1"></Overlay>
+      {isOverlayVisible && (
+        <Overlay
+          level={level.levelNumber}
+          score={currentScore}
+          showLoader={isLoaderVisible}
+          showGameOverInfo={isGameOverInfoVisible}
+          onButtonClicked={onButtonClicked}
+        ></Overlay>
+      )}
       <Header title="Memory Card"></Header>
       <div className="Score">
         <p className="Score__element">Score: {currentScore}</p>
