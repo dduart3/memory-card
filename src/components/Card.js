@@ -1,11 +1,11 @@
 import React from "react";
 import "../styles/Card.css";
 
-const Card = ({ name, imgSource }) => {
+const Card = ({ id, name, imgSource, onCardClicked }) => {
   return (
-    <div className="Card">
+    <div className="Card" id={id} onClick={onCardClicked}>
       <img className="Card__image" src={imgSource}></img>
-      <p className="Card__name">Name: {name}</p>
+      <p className="Card__name">{name}</p>
     </div>
   );
 };
