@@ -4,6 +4,8 @@ import Header from "./Header";
 import Cards from "./Cards";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Overlay from "./Overlay";
+
 const Container = () => {
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
@@ -12,62 +14,104 @@ const Container = () => {
   const [level, setLevel] = useState({ levelNumber: 1, cardsQuantity: 4 });
   const [cards, setCards] = useState(null);
 
+  const isCharactersSet = () => characters;
+
+  const isGameOver = () => gameOver;
+
+  const isCardsSet = () => cards;
+
+  const isCardClicked = (card) => card.clicked;
+
+  const hasPlayerWon = () => level.levelNumber > 4;
+
+  const isCurrentScoreTheHighest = () => currentScore > highScore;
+
+  const areAllCardsClicked = () =>
+    !cards.find((card) => card.clicked === false);
+
+  //Fetch characters from api and set the responde in the state
   useEffect(() => {
     const getCharacters = async () => {
       try {
         const response = await axios.get(
           "https://naruto-api.herokuapp.com/api/v1/characters"
         );
-        console.log("esto se ejecuta unavez");
         setCharacters(response.data);
       } catch (error) {
         console.log(error);
       }
     };
-
     getCharacters();
   }, []);
 
+  //Checks every time the cards state is updated and if all cards are clicked then levels up
   useEffect(() => {
-    if (characters) {
-      setCards(getRandomCharacters(characters, level.cardsQuantity));
-    }
-  }, [characters]);
-
-  useEffect(() => {
-    if (cards) {
-      if (!cards.find((card) => card.clicked === false)) {
+    if (isCardsSet()) {
+      if (areAllCardsClicked()) {
         updateLevel();
       }
     }
   }, [cards]);
 
-  const incrementScore = () => {
-    setCurrentScore(Math.round(Math.random() * 50));
+  useEffect(() => {
+    if (isCurrentScoreTheHighest()) {
+      setHighScore(currentScore);
+    }
+  }, [currentScore]);
+
+  useEffect(() => {
+    if (hasPlayerWon()) {
+      setGameOver(true);
+    }
+
+    if (isCharactersSet() && isGameOver()) {
+      updateLevel();
+    } else if (isCharactersSet()) {
+      setCards(getRandomCharacters(characters, level.cardsQuantity));
+    }
+  }, [level, characters, gameOver]);
+
+  const updateScore = () => {
+    setCurrentScore(currentScore + 1);
   };
 
-  const updateLevel = () => {
-    setLevel({
-      levelNumber: level.levelNumber + 1,
-      cardsQuantity: level.cardsQuantity + 2,
-    });
-  };
-
-  const setCardClicked = (card) => {
-    setCards({
-      ...cards,
-      ...(card.clicked = true),
-    });
-  };
-
-  const updateGame = (id) => {
+  const onCardClicked = (id) => {
     const card = cards.find((card) => card.id === id);
 
-    if (card.clicked === true) {
+    if (isCardClicked(card)) {
       setGameOver(true);
     } else {
       setCardClicked(card);
+      setCards(shuffleArray(cards));
+      updateScore();
     }
+  };
+
+  const updateLevel = () => {
+    if (isGameOver()) {
+      //Restart level
+      setCurrentScore(0);
+      setGameOver(false);
+      setLevel({
+        levelNumber: 1,
+        cardsQuantity: 4,
+      });
+    } else {
+      //Level up
+      setLevel({
+        levelNumber: level.levelNumber + 1,
+        cardsQuantity: level.cardsQuantity + 2,
+      });
+    }
+  };
+
+  const setCardClicked = (card) => {
+    const cardIndex = cards.indexOf(card);
+
+    const cardsCopy = [...cards];
+    cardsCopy[cardIndex].clicked = true;
+
+    setCards(cardsCopy);
   };
 
   const createRandomNumbersArray = (size, max) => {
@@ -106,17 +150,28 @@ const Container = () => {
     return randomCharacters;
   };
 
+  const shuffleArray = (array) => {
+    let shuffled = array
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+
+    return shuffled;
+  };
+
   return (
     <div className="Container">
+      <Overlay text="loading lvl 1"></Overlay>
       <Header title="Memory Card"></Header>
-
+      <div className="Score">
+        <p className="Score__element">Score: {currentScore}</p>
+        <p className="Score__element">High Score: {highScore}</p>
+      </div>
       <Cards
-        level={level}
-        characters={characters}
-        getRandomCharacters={getRandomCharacters}
+        onCardClicked={onCardClicked}
+        cards={cards}
         currentScore={currentScore}
         highScore={highScore}
-        incrementScore={updateLevel}
       ></Cards>
     </div>
   );
