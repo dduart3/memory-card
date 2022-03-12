@@ -31,50 +31,7 @@ const Container = () => {
 
   const areAllCardsClicked = () =>
     !cards.find((card) => card.clicked === false);
-
-  //Fetch characters from api and set the responde in the state
-  useEffect(() => {
-    const getCharacters = async () => {
-      try {
-        const response = await axios.get(
-          "https://naruto-api.herokuapp.com/api/v1/characters"
-        );
-        setCharacters(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCharacters();
-  }, []);
-
-  //Checks every time the cards state is updated and if all cards are clicked then levels up
-  useEffect(() => {
-    if (isCardsSet()) {
-      if (areAllCardsClicked()) {
-        updateLevel();
-      }
-    }
-  }, [cards]);
-
-  useEffect(() => {
-    if (isCurrentScoreTheHighest()) {
-      setHighScore(currentScore);
-    }
-  }, [currentScore]);
-
-  useEffect(() => {
-    if (hasPlayerWon()) {
-      setGameOver(true);
-    }
-
-    if (isCharactersSet() && isGameOver()) {
-      showGameOverInfo();
-    } else if (isCharactersSet()) {
-      showLoader(1.5);
-      setCards(getRandomCharacters(characters, level.cardsQuantity));
-    }
-  }, [level, characters, gameOver]);
-
+  
   const updateScore = () => {
     setCurrentScore(currentScore + 1);
   };
@@ -184,6 +141,51 @@ const Container = () => {
     return shuffled;
   };
 
+
+  //Fetch characters from api and set the responde in the state
+  useEffect(() => {
+    const getCharacters = async () => {
+      try {
+        const response = await axios.get(
+          "https://naruto-api.herokuapp.com/api/v1/characters"
+        );
+        setCharacters(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCharacters();
+  }, []);
+
+  //Checks every time the cards state is updated and if all cards are clicked then levels up
+  useEffect(() => {
+    if (isCardsSet()) {
+      if (areAllCardsClicked()) {
+        updateLevel();
+      }
+    }
+  }, [cards]);
+
+  useEffect(() => {
+    if (isCurrentScoreTheHighest()) {
+      setHighScore(currentScore);
+    }
+  }, [currentScore]);
+
+  useEffect(() => {
+    if (hasPlayerWon()) {
+      setGameOver(true);
+    }
+
+    if (isCharactersSet() && isGameOver()) {
+      showGameOverInfo();
+    } else if (isCharactersSet()) {
+      showLoader(1.5);
+      setCards(getRandomCharacters(characters, level.cardsQuantity));
+    }
+  }, [level, characters, gameOver]);
+
+  
   return (
     <div className="Container">
       {isOverlayVisible && (
